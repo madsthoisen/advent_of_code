@@ -37,6 +37,5 @@ for bus in busses_active:
 print(bus_no * m)
 
 # part II
-n = [int(b) for b in busses if b.isdigit()]
 a = [int(b) - i for i, b in enumerate(busses) if b.isdigit()]
-print(chinese_remainder(n, a))
+print(chinese_remainder(busses_active, a))
