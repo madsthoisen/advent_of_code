@@ -15,6 +15,6 @@ W = np.array([[bus, bus - t % bus] for bus in busses_active])
 earliest = np.argmin(W, 0)[1]
 print(np.prod(W[earliest]))
 
-# part II
+# part II // Chinese Remainder Theorem
 a = [int(b) - i for i, b in enumerate(busses) if b.isdigit()]
 print(solve_congruence(*list(zip(a, busses_active)))[0])
