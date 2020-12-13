@@ -1,6 +1,7 @@
+import numpy as np
+
 from functools import reduce
 from math import inf
-
 from sympy.ntheory.modular import solve_congruence
 
 with open("input") as f:
@@ -10,13 +11,9 @@ with open("input") as f:
 
 # part I
 busses_active = [int(b) for b in busses if b.isdigit()]
-m = inf
-for bus in busses_active:
-    wait = bus - t%bus
-    if wait < m:
-        m = wait
-        bus_no = bus
-print(bus_no * m)
+W = np.array([[bus, bus - t % bus] for bus in busses_active])
+earliest = np.argmin(W, 0)[1]
+print(np.prod(W[earliest]))
 
 # part II
 a = [int(b) - i for i, b in enumerate(busses) if b.isdigit()]
