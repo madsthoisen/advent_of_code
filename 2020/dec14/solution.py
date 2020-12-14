@@ -21,11 +21,10 @@ dic = {}
 for L in ins:
     mask = L[0]
     for mem, val in L[1:]:
-        for comb in it.product([0, 1], repeat = mask.count('X')):
+        for comb in it.product("01", repeat = mask.count('X')):
             comb = list(comb)
             mem_bit = list("{0:b}".format(mem).zfill(36))
             mem_bit = [m if m == 1 else v for v, m in zip(mem_bit, mask)]
-            mem_bit = [comb.pop(0) if x == 'X' else m for x, m in zip(mask, mem_bit)]
-            mem_out = int(''.join(map(str, mem_bit)), 2)
-            dic[mem_out] = val
+            mem_bit = [comb.pop(0) if m == 'X' else x for x, m in zip(mem_bit, mask)]
+            dic[int(''.join(mem_bit), 2)] = val
 print(sum(dic.values()))
