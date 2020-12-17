@@ -1,7 +1,5 @@
-import numpy as np
-
-from collections import defaultdict
 from itertools import product
+from operator import add
 
 with open("input") as f:
     tmp = [line.strip() for line in f.readlines()]
@@ -9,39 +7,28 @@ with open("input") as f:
 def evolve(dim, tmp, rounds):
     h, w = len(tmp), len(tmp[0])
     grid = {(x, y) + (0,) * (dim - 2): tmp[x][y] for x in range(h) for y in range(w)}
+    inc = set(product([-1, 0, 1], repeat=dim)) - {(0,) * dim}
 
     def widen(grid):
-        new_grid = grid.copy()
+        new_grid = {}
         for p in grid.keys():
-            for i in product([-1, 0, 1], repeat=dim):
-                if i != (0,) * dim:
-                    new_p = tuple([e1 + e2 for e1, e2 in zip(p, i)])
-                    if new_p not in grid.keys():
-                        new_grid[new_p] = '.'
+            for i in inc:
+                new_p = tuple(map(add, p, i))
+                new_grid[new_p] = grid[new_p] if new_p in grid.keys() else '.'
         return new_grid
 
     def update(grid):
         new_grid = grid.copy()
         for p in grid.keys():
-            n = []
-            for i in product([-1, 0, 1], repeat=dim):
-                if i == (0,) * dim:
-                    continue
-                new_p = tuple([e1 + e2 for e1, e2 in zip(p, i)])
-                if new_p in grid.keys():
-                    n.append(grid[new_p])
-            if grid[p] == '#':
-                if n.count('#') not in [2, 3]:
-                    new_grid[p] = '.'
-            else:
-                if n.count('#') == 3:
-                    new_grid[p] = '#'
+            n = [grid[tuple(map(add, p, i))] for i in inc if tuple(map(add, p, i)) in grid.keys()]
+            new_grid[p] = '.' if grid[p] == '#' and n.count('#') not in [2, 3] else grid[p]
+            new_grid[p] = '#' if grid[p] == '.' and n.count('#') == 3 else new_grid[p]
         return new_grid
-
 
     for _ in range(rounds):
         grid = widen(grid)
         grid = update(grid)
+
     return grid
 
 # part I
