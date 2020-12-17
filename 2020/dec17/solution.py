@@ -9,15 +9,9 @@ def evolve(dim, tmp, rounds):
     grid = {(x, y) + (0,) * (dim - 2): tmp[x][y] for x in range(h) for y in range(w)}
     inc = set(product([-1, 0, 1], repeat=dim)) - {(0,) * dim}
 
-    def widen(grid):
-        new_grid = {}
-        for p in grid.keys():
-            for i in inc:
-                new_p = tuple(map(add, p, i))
-                new_grid[new_p] = grid[new_p] if new_p in grid.keys() else '.'
-        return new_grid
-
     def update(grid):
+        extension = {tuple(map(add, p, i)): '.' for p in grid.keys() for i in inc if tuple(map(add, p, i)) not in grid.keys()}
+        grid = {**grid, **extension}
         new_grid = grid.copy()
         for p in grid.keys():
             n = [grid[tuple(map(add, p, i))] for i in inc if tuple(map(add, p, i)) in grid.keys()]
@@ -26,7 +20,6 @@ def evolve(dim, tmp, rounds):
         return new_grid
 
     for _ in range(rounds):
-        grid = widen(grid)
         grid = update(grid)
 
     return grid
