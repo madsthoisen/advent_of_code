@@ -10,11 +10,11 @@ def evolve(dim, tmp, rounds):
     inc = set(product([-1, 0, 1], repeat=dim)) - {(0,) * dim}
 
     def update(grid):
-        extension = {tuple(map(add, p, i)): '.' for p in grid.keys() for i in inc if tuple(map(add, p, i)) not in grid.keys()}
+        extension = {new_p: '.' for p in grid.keys() for i in inc if (new_p := tuple(map(add, p, i))) not in grid.keys()}
         grid = {**grid, **extension}
         new_grid = grid.copy()
         for p in grid.keys():
-            n = [grid[tuple(map(add, p, i))] for i in inc if tuple(map(add, p, i)) in grid.keys()]
+            n = [grid[new_p] for i in inc if (new_p := tuple(map(add, p, i))) in grid.keys()]
             new_grid[p] = '.' if grid[p] == '#' and n.count('#') not in [2, 3] else grid[p]
             new_grid[p] = '#' if grid[p] == '.' and n.count('#') == 3 else new_grid[p]
         return new_grid
