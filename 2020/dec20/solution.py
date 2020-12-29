@@ -134,6 +134,3 @@ picture = rotate(picture)
 max_seamonsters = max(max_seamonsters, check_seamonster(picture))
 
 print(sea - max_seamonsters*15)
-
-# 1930 too high
-# 1900 too high
