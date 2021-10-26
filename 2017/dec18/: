@@ -1,0 +1,90 @@
+from collections import defaultdict
+
+
+with open("input") as f:
+	instructions = [line.strip().split(' ') for line in f.readlines()]
+
+reg = defaultdict(int)
+pos = 0
+while True:
+	instruction = instructions[pos]
+	i = instruction[0]
+	x = instruction[1]
+	if i not in {'snd', 'rcv'}:
+		y = instruction[2]
+		try:
+			y = int(y)
+		except:
+			y = reg[y]
+	if i == 'snd':
+		sound = reg[x]
+	elif i == 'set':
+		reg[x] = y
+	elif i == 'add':
+		reg[x] += y
+	elif i == 'mul':
+		reg[x] *= y
+	elif i == 'mod':
+		reg[x] %= y
+	elif i == 'rcv':
+		if reg[x] != 0:
+			rcv = sound
+			print(rcv)
+			break
+	elif i == 'jgz':
+		if reg[x] > 0:
+			pos += y
+			continue
+	pos += 1
+
+
+
+def program(program_id, instructions):
+	reg = defaultdict(int)
+	reg['p'] = program_id
+	pos = 0
+	while True:
+		print(program_id, pos)
+		instruction = instructions[pos]
+		i = instruction[0]
+		x = instruction[1]
+		if i not in {'snd', 'rcv'}:
+			y = instruction[2]
+			try:
+				y = int(y)
+			except:
+				y = reg[y]
+		if i == 'snd':
+			yield reg[x]
+		elif i == 'set':
+			reg[x] = y
+		elif i == 'add':
+			reg[x] += y
+		elif i == 'mul':
+			reg[x] *= y
+		elif i == 'mod':
+			reg[x] %= y
+		elif i == 'rcv':
+			while True:
+				reg[x] = yield
+		elif i == 'jgz':
+			if reg[x] > 0:
+				pos += y
+				continue
+		pos += 1
+
+with open("input_test") as f:
+	instructions = [line.strip().split(' ') for line in f.readlines()]
+program_0 = program(0, instructions)
+program_1 = program(1, instructions)
+
+i = 0
+while True:
+	out_0 = next(program_0)
+	out_1 = next(program_1) 
+	print(out_0, out_1)
+	program_0.send(out_1)
+	program_1.send(out_0)
+	if not out_0 and not out_1:
+		break
+	i += 1
