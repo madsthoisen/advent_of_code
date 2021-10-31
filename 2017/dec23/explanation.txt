@@ -1,0 +1,65 @@
+# Initialization
+b = 107900
+c = 124900
+
+# Loops
+8:  set f 1 <---.
+9:  set d 2     |
+10: set e 2 <--------. 
+11: set g d <------. |
+12: mul g e     |  | |
+13: sub g b     |  | |
+14: jnz g 2     |  | |
+15: set f 0     |  | |
+16: sub e -1    |  | |
+17: set g e     |  | |
+18: sub g b     |  | |
+19: jnz g -8  -----/ |
+20: sub d -1    |    |
+21: set g d     |    |
+22: sub g b     |    | 
+23: jnz g -13 -------/ 
+24: jnz f 2     |
+25: sub h -1    |
+26: set g b     |
+27: sub g c     |
+28: jnz g 2     |
+29: jnz 1 3     |
+30: sub b -17   |
+31: ------------/
+
+# Pseudocode
+Initializes with b = 107900 and c = 124900 and then follows with the loop:
+while True: # loop 8 -> 31
+    f = 1
+    d = 2
+    while True: # loop 10 -> 23
+        e = 2
+        while True: # loop 11 -> 19
+            if d * e == b:
+                f = 0 
+            e += 1
+            if e == b:
+                break
+        d += 1
+        if d == b:
+            break
+    if f == 0:
+        h += 1
+    if b == c:
+        FINISH
+    else:
+        b += 17
+
+This can also be written in Python as:
+h = 0
+for b in range(107900, 124900 + 1, 17):
+    for d in range(2, b + 1):
+        for e in range(2, b + 1):
+            if d * e == b:
+                f = 0
+    if f == 0:
+        h += 1
+print(h)
+
+Which gives that the program counts the number of composite numbers in the range(107900, 124900, 17)
