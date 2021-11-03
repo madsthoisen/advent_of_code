@@ -1,0 +1,65 @@
+cpy 1 a
+cpy 1 b
+cpy 26 d
+jnz c 2
+jnz 1 5
+cpy 7 c
+inc d  <--.
+dec c     |
+jnz c -2 -/
+cpy a c  <-.
+inc a   <----.
+dec b      | |
+jnz b -2 ----/
+cpy c b    |
+dec d      |
+jnz d -6 --/
+cpy 17 c
+cpy 18 d <-----.
+inc a    <--.  |
+dec d       |  |
+jnz d -2  --/  |
+dec c          |
+jnz c -5 ------/
+
+# initialize a=1, b=1, c=7, d=26
+for c in range(7, 0, -1):
+    d += 1
+
+while d!=0:
+    c = a
+    while b != 0:
+        a += 1
+        b -= 1
+    b = c
+    d -= 1
+
+c = 17
+while c != 0:
+    d = 18
+    while d != 0:
+        a += 1
+        d -= 1
+    c -= 1
+
+
+# translates to
+a = 1, b = 1, c = 7, d = 26
+a = 1, b = 1, c = 0, d = 33
+while d!=0:
+    c = a
+    a += b
+    b = c
+    d -= 1
+    # First few iterations (fibonnaci!)
+    c=1, a=2, b=1, d=32
+    c=2, a=3, b=2, d=31
+    c=3, a=5, b=3, d=30
+    c=5, a=8, b=5, d=29
+    c=8, a=13, b=8, d=28
+
+c = fib(34), a=fib(35), b=fib(34), d=0
+c=17, a=fib(35), b=fib(34), d=0
+a += 18*17
+
+# Result is fib(35) + 18 * 17
