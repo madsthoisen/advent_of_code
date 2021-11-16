@@ -1,0 +1,26 @@
+# 0 - 1:
+a = 12, b = 11, c = 0, d = 0
+
+# 2 - 15
+a *= b, b -= 1, c = 2*b, d = 0
+
+# 16 - 18 
+16. tgl c    ---> inc c
+17. cpy -16 c
+18. jnz 1 c  ---> cpy 1 c
+
+19. cpy 81 c
+
+# loop
+20. jnz 93 d ---> cpy 93 d
+21. inc a
+22. inc d    ---> dec d
+23. jnz d -2
+24. inc c    ---> dec c
+25. jnz c -5
+
+for i in range(81):
+    for j in range(93):
+        a += 1
+
+result = a! + 81*93
