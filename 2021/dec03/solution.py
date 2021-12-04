@@ -2,45 +2,37 @@ import numpy as np
 
 
 with open("input") as f:
-    lines = [list(map(int, line.strip())) for line in f.readlines()]
+    binaries = np.array([np.array(list(map(int, line.strip()))) for line in f.readlines()])
 
 
-def get(binaries):
-    half = len(binaries) / 2
-    bit_sum = np.zeros(len(binaries[0]))
-    for binary in binaries:
-        bit_sum += np.array(list(binary))
-    most_common = [int(x >= half) for x in bit_sum]
-    least_common = [int(x < half) for x in bit_sum]
-    return most_common, least_common
+def get_most_common(binaries):
+    return [int(x >= len(binaries) / 2) for x in np.sum(binaries, axis=0)]
 
 
-def list_to_bin(l):
-    return int(''.join(str(x) for x in l), 2)
+def binlist_to_int(l):
+    return sum(x * 2**i for x, i in zip(l[::-1], range(len(l))))
+
+
+def filter_bin(binaries, typ):
+    binaries_ = binaries
+    for i in range(len(binaries_[0])):
+        target = get_most_common(binaries_)
+        if typ == 1:
+            target = [1 - x for x in target]
+        binaries_ = [line for line in binaries_ if line[i] == target[i]]
+        if len(binaries_) == 1:
+            return binlist_to_int(binaries_[0])
 
 
 # part I
-most_common, least_common = get(lines)
-gamma = list_to_bin(most_common)
-epsilon = list_to_bin(least_common)
+most_common = get_most_common(binaries)
+least_common = [1 - x for x in most_common]
+gamma = binlist_to_int(most_common)
+epsilon = binlist_to_int(least_common)
 print(gamma * epsilon)
 
 
 # part II
-lines_ = lines
-for i in range(len(lines_[0])):
-    most_common, _ = get(lines_)
-    lines_ = [line for line in lines_ if line[i] == most_common[i]]
-    if len(lines_) == 1:
-        oxygen = list_to_bin(lines_[0])
-        break
-
-lines_ = lines
-for i in range(len(lines[0])):
-    _, least_common = get(lines_)
-    lines_ = [line for line in lines_ if line[i] == least_common[i]]
-    if len(lines_) == 1:
-        co2 = list_to_bin(lines_[0])
-        break
-
+oxygen = filter_bin(binaries, 0)
+co2 = filter_bin(binaries, 1)
 print(co2 * oxygen)
