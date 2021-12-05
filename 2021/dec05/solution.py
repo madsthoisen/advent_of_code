@@ -18,9 +18,10 @@ def get_overlap(include_diagonals):
         elif y2 == y1:
             for x in x_range:
                 points[(x, y2)] += 1
-        if include_diagonals and x1 != x2 and y1 != y2:
-            for x, y in zip(x_range, y_range):
-                points[(x, y)] += 1
+        else:
+            if include_diagonals:
+                for x, y in zip(x_range, y_range):
+                    points[(x, y)] += 1
     return sum(1 for v in points.values() if v > 1)
 
 
