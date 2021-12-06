@@ -3,15 +3,12 @@ with open("input") as f:
 
 
 fish = [numbers.count(i) for i in range(9)]
-sizes = {}
 for i in range(256):
-    birth = fish.pop(0)
-    fish[6] += birth
-    fish.append(birth)
-    sizes[i + 1] = sum(fish)
-
-# part I
-print(sizes[80])
+    fish.append(fish.pop(0))
+    fish[6] += fish[8]
+    if i + 1 == 80:
+        # part I
+        print(sum(fish))
 
 # part II
-print(sizes[256])
+print(sum(fish))
