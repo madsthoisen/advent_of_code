@@ -25,6 +25,6 @@ def step(n):
 # part I
 print(step(10))
 
-# part I
+# part II
 print(step(30))
 
