@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 
 with open("input") as f:
@@ -6,35 +6,25 @@ with open("input") as f:
 
 
 word = lines[0]
-s = {(w := word[i : i + 2]): word.count(w) for i in range(len(word) - 1)}
+pairs = Counter(u + v for u, v in zip(word, word[1:]))
+chars = Counter(word)
 rules = dict(line.split(' -> ') for line in lines[2:])
 
 
-def step(s):
-    new_s = defaultdict(int)
-    for k in s:
-        if k in rules:
-            new_s[k[0] + rules[k]] += s[k]
-            new_s[rules[k] + k[1]] += s[k]
-        else:
-            new_s[k] = 1
-    return new_s
-
-
-def get_answer(n_steps, s):
-    for _ in range(n_steps):
-        s = step(s)
-    
-    counts = defaultdict(int)
-    for w, v in s.items():
-        counts[w[0]] += v
-        counts[w[1]] += v
-    counts = {k: v // 2 if k not in {word[0], word[1]} else v // 2 + 1 for k, v in counts.items()}
-    return max(counts.values()) - min(counts.values())
+def step(n):
+    for _ in range(n):
+        for k, v in pairs.copy().items():
+            assert k in rules
+            pairs[k[0] + rules[k]] += v
+            pairs[rules[k] + k[1]] += v 
+            chars[rules[k]] += v
+            pairs[k] -= v
+    return max(chars.values()) - min(chars.values())
 
 
 # part I
-print(get_answer(10, s))
+print(step(10))
 
-# part II
-print(get_answer(40, s))
+# part I
+print(step(30))
+
