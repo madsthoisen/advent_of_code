@@ -1,5 +1,5 @@
-use std::fs;
 use std::collections::HashSet;
+use std::fs;
 
 fn solve(s: &str) -> (usize, usize) {
     let mut positions = HashSet::new();
@@ -12,7 +12,7 @@ fn solve(s: &str) -> (usize, usize) {
     positions.insert(pos);
     positions_combined.insert(pos);
 
-    for item in s.chars().enumerate(){
+    for item in s.chars().enumerate() {
         let (i, ch) = item;
         let (coord, val) = match ch {
             '<' => (0, -1),
@@ -26,8 +26,7 @@ fn solve(s: &str) -> (usize, usize) {
         if i % 2 == 0 {
             pos_santa[coord] += val;
             positions_combined.insert(pos_santa);
-        }
-        else if i % 2 == 1 {
+        } else if i % 2 == 1 {
             pos_robot[coord] += val;
             positions_combined.insert(pos_robot);
         }
