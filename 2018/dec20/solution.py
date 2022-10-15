@@ -22,27 +22,12 @@ def parse_regex(regex, org):
         elif char == ')':
             return org, regex
 
-def get_depth(G, source):
-    depth = 0
-    layer = [source]
-    visited = set()
-    while layer:
-        depth += 1
-        next_layer = []
-        for node in layer:
-            for child in G[node]:
-                if child not in visited:
-                    next_layer.append(child)
-                    visited.add(child)
-        layer = next_layer
-    return depth - 1
-
 G = nx.Graph()
 p = (0, 0)
 parse_regex(regex, p)
 
 # part I
-print(get_depth(G, p))
+print(max(nx.shortest_path_length(G, p).values()))
 
 # part II
 print(sum(1 for l in nx.shortest_path_length(G, p).values() if l >= 1000))
