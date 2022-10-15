@@ -8,116 +8,69 @@ with open("input") as f:
 
 
 def addr(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a] + r[b]
-    return r_
+    r[c] = r[a] + r[b]
 
 def addi(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a] + b
-    return r_
+    r[c] = r[a] + b
 
 def mulr(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a] * r[b]
-    return r_
+    r[c] = r[a] * r[b]
 
 def muli(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a] * b
-    return r_
+    r[c] = r[a] * b
 
 def banr(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a] & r[b]
-    return r_
+    r[c] = r[a] & r[b]
 
 def bani(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a] & b
-    return r_
+    r[c] = r[a] & b
 
 def borr(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a] | r[b]
-    return r_
+    r[c] = r[a] | r[b]
 
 def bori(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a] | b
-    return r_
+    r[c] = r[a] | b
 
 def setr(r, a, b, c):
-    r_ = list(r)
-    r_[c] = r[a]
-    return r_
+    r[c] = r[a]
 
 def seti(r, a, b, c):
-    r_ = list(r)
-    r_[c] = a
-    return r_
+    r[c] = a
 
 def gtir(r, a, b, c):
-    r_ = list(r)
-    r_[c] = 1 if a > r[b] else 0
-    return r_
+    r[c] = 1 if a > r[b] else 0
 
 def gtri(r, a, b, c):
-    r_ = list(r)
-    r_[c] = 1 if r[a] > b else 0
-    return r_
+    r[c] = 1 if r[a] > b else 0
 
 def gtrr(r, a, b, c):
-    r_ = list(r)
-    r_[c] = 1 if r[a] > r[b] else 0
-    return r_
+    r[c] = 1 if r[a] > r[b] else 0
 
 def eqir(r, a, b, c):
-    r_ = list(r)
-    r_[c] = 1 if a == r[b] else 0
-    return r_
+    r[c] = 1 if a == r[b] else 0
 
 def eqri(r, a, b, c):
-    r_ = list(r)
-    r_[c] = 1 if r[a] == b else 0
-    return r_
+    r[c] = 1 if r[a] == b else 0
 
 def eqrr(r, a, b, c):
-    r_ = list(r)
-    r_[c] = 1 if r[a] == r[b] else 0
-    return r_
+    r[c] = 1 if r[a] == r[b] else 0
 
 
-possibilities = {'addr': addr, 
-                 'addi': addi,
-                 'mulr': mulr,
-                 'muli': muli, 
-                 'banr': banr, 
-                 'bani': bani, 
-                 'borr': borr, 
-                 'bori': bori, 
-                 'setr': setr, 
-                 'seti': seti, 
-                 'gtir': gtir, 
-                 'gtri': gtri, 
-                 'gtrr': gtrr, 
-                 'eqir': eqir, 
-                 'eqri': eqri, 
-                 'eqrr': eqrr}
+opcodes = {'addr': addr, 'addi': addi, 'mulr': mulr, 'muli': muli, 
+           'banr': banr, 'bani': bani, 'borr': borr, 'bori': bori, 
+           'setr': setr, 'seti': seti, 'gtir': gtir, 'gtri': gtri, 
+           'gtrr': gtrr, 'eqir': eqir, 'eqri': eqri, 'eqrr': eqrr}
 
-
-opcodes = {i: set(possibilities.keys()) for i in range(16)}
-manual = [list(map(int, re.findall("\d+", t))) for t in manual.split('\n\n')]
+possible_opcodes = {i: set(opcodes) for i in range(16)}
+manual = [[list(map(int, re.findall("\d+", l))) for l in el.split("\n")] for el in manual.split("\n\n")]
 behave_like_more_than_three = 0
-for item in manual:
-    before = item[:4]
-    opcode, a, b, reg = item[4 : 8]
-    after = item[8:]
+for regs_before, (opcode, a, b, c), regs_after in manual:
     behave_like = 0
-    for typ, op in possibilities.items():
-        tmp = op(before, a, b, reg)
-        if after != tmp:
-             opcodes[opcode] -= {typ}
+    for typ, op in opcodes.items():
+        regs = list(regs_before)
+        op(regs, a, b, c)
+        if regs != regs_after:
+             possible_opcodes[opcode] -= {typ}
         else:
             behave_like += 1
     if behave_like > 2:
@@ -125,23 +78,19 @@ for item in manual:
 
 # part I
 print(behave_like_more_than_three)
-
+    
 ## part II
+program = [list(map(int, l.split())) for l in program.strip().split("\n")]
 while True:
-    for k, v in opcodes.items():
-        if len(v) == 1:
-            new_opcodes = {k: v for k, v in opcodes.items()}
-            for k_, v_ in opcodes.items():
-                if k_ != k:
-                    new_opcodes[k_] -= v
-    opcodes = {k: v for k, v in new_opcodes.items()}
-    if all(len(v) == 1 for v in opcodes.values()):
+    fixed = [(k, v) for k, v in possible_opcodes.items() if len(v) == 1]
+    for k, v in possible_opcodes.items():
+        for i, opcode in fixed:
+            if i != k:
+                possible_opcodes[k] = possible_opcodes[k] - opcode
+    if all(len(v) == 1 for v in possible_opcodes.values()):
+        opcodes = {k: opcodes[v.pop()] for k, v in possible_opcodes.items()}
         break
 
-opcodes = {k: list(v)[0] for k, v in opcodes.items()}
 regs = [0, 0, 0, 0]
-for ins in program.strip().split("\n"):
-    opcode, a, b, reg = list(map(int, ins.split()))
-    op = possibilities[opcodes[opcode]]
-    regs = op(regs, a, b, reg)
+[opcodes[opcode](regs, a, b, c) for opcode, a, b, c in program]
 print(regs[0])
