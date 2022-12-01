@@ -1,5 +1,5 @@
 with open("input") as f:
-     cals = sorted([sum(list(map(int, x.split('\n')))) for x in f.read().split('\n\n')])
+     cals = sorted([sum(map(int, x.split('\n'))) for x in f.read().split('\n\n')])
 
 
 # part I
