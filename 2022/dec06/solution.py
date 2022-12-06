@@ -1,5 +1,5 @@
 with open("input") as f:
-    s = list(f.read())
+    s = f.read()
 
 
 # part I
