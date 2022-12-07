@@ -1,28 +1,67 @@
-import networkx as nx
-import re
-
 from collections import defaultdict, Counter
-from utils import *
 
 
-with open("input") as f:
-    numbers = [int(x) for x in f.readlines()]  # one number per line
-    #numbers = [int(x) for x in f.read().split(',')]  # comma separated numbers
-
-    #b1, b2 = f.read.split('\n\n')  # two blocks
-    #strings = [line.strip() for line in f.readlines()]
-    #lines = [list(map(int, re.findall("-?\d+", line))) for line in strings]  # nums in every line of above
-
-print(numbers)
+with open("input_test") as f:
+    strings = [line.strip() for line in f.readlines()]
 
 
+d = {}
+curr = d
+i = 0
+while i < len(strings):
+    l = strings[i].split(' ')
+    assert l[0] == '$'
+    if l[1] == 'ls':
+        while True:
+            i += 1
+            if i >= len(strings):
+                break
+            l = strings[i].split(' ')
+            if l[0] == '$':
+                break
+            if l[0] == 'dir':
+                curr[l[1]] = {}
+                pass
+            else:
+                curr[l[1]] = int(l[0])
+
+    elif l[1] == 'cd':
+        a = l[2]
+        if a == '/':
+            curr = d
+        elif a == '..':
+            curr = prev
+        else:
+            if a not in curr:
+                curr[a] = {}
+            prev = curr
+            curr = curr[a]
+        i += 1
+    else:
+        assert False
+
+vals = defaultdict(int)
+def get_vals(d, name):
+    vals[name] = get_all_filesums(d)
+    for k, v in d.items():
+        print(k, v)
+        if isinstance(v, dict):
+            get_vals(v, k)
 
 
-#dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
-#nx.all_simple_paths()
-#lol = [[0, 1, 1, 1, 1, 0], [1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0]]
-#print_lol(lol, mode='lit')
-#print(binlist_to_int([1, 0, 0, 1]))
-#l = [1, 1, 2, 3, 44, 4, 4, 4]
-#d = Counter(l)
-#max(d, key=d.get))
+def get_all_filesums(d, total=0):
+    if isinstance(d, int):
+        return d
+    for k, v in d.items():
+        total += get_all_filesums(v)
+    return total
+
+print(d)
+assert False
+vals = get_vals(d, 'root')
+add = 0
+for k, v in vals.items():
+    if v <= 100_000:
+        add += v
+
+# 495837 is too low
