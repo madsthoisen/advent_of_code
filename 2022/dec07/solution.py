@@ -1,11 +1,8 @@
-from collections import defaultdict
-
-
 with open("input") as f:
     lines = [line.strip().split(' ') for line in f.readlines()]
 
 
-root = defaultdict(dict)
+root = {}
 curr = root
 prev = []
 for l in lines:
