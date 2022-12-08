@@ -1,36 +1,29 @@
+from collections import defaultdict
+
+
 with open("input") as f:
-    strings = [line.strip().split(' ') for line in f.readlines()][::-1]
+    lines = [line.strip().split(' ') for line in f.readlines()]
 
 
-root = {}
+root = defaultdict(dict)
 curr = root
 prev = []
-l = strings.pop()
-while strings:
-    if l[1] == 'ls':
-        while strings:
-            l = strings.pop()
-            if l[0] == '$':
-                break
-            elif l[0] == 'dir':
-                if l[1] not in curr:
-                    curr[l[1]] = {}
-            else:  # file
-                curr[l[1]] = int(l[0])
-
-    elif l[1] == 'cd':
-        a = l[2]
-        if a == '/':
-            curr = root
-            prev = []
-        elif a == '..':
+for l in lines:
+    if l[1] == 'cd':
+        if l[2] == '/':
+            curr, prev = root, []
+        elif l[2] == '..':
             curr = prev.pop()
         else:
-            if a not in curr:
-                curr[a] = {}
             prev.append(curr)
-            curr = curr[a]
-        l = strings.pop()
+            curr = curr[l[2]]
+    elif l[1] == 'ls':
+        pass
+    else:
+        if l[0] == 'dir' and l[1] not in curr:
+            curr[l[1]] = {}
+        else:
+            curr[l[1]] = int(l[0])
 
 
 def get_dirsize(d):
@@ -44,7 +37,6 @@ def get_sizes(d):
     for dir_name, dir_dict in d.items():
         if isinstance(dir_dict, dict):
             get_sizes(dir_dict)
-    return sums
 
 
 # part I
