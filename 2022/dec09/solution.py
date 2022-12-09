@@ -8,8 +8,7 @@ with open("input") as f:
 
 
 k = [np.zeros(2) for _ in range(10)]
-p1 = {tuple(k[1])}
-p2 = {tuple(k[9])}
+p1, p2 = {tuple(k[1])}, {tuple(k[9])}
 moves = {'L': [-1, 0], 'R': [1, 0], 'U': [0, 1], 'D': [0, -1]}
 for move, b in lines:
     for _ in range(int(b)):
