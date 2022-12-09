@@ -1,57 +1,30 @@
+import numpy as np
+from numpy import sign
+from numpy.linalg import norm
+
+
 with open("input") as f:
-    lines = [line.strip() for line in f.readlines()]
+    lines = [line.strip().split() for line in f.readlines()]
 
 
-k = [[0, 0] for _ in range(10)]
-tales = set()
-tales.add(tuple(k[9]))
-for l in lines:
-    a, b = l.split(' ')
-    b = int(b)
-    print()
-    print(l)
-    for _ in range(b):
-        if a == 'L':
-            k[0][0] -= 1
-        elif a == 'R':
-            k[0][0] += 1
-        if a == 'U':
-            k[0][1] += 1
-        elif a == 'D':
-            k[0][1] -= 1
+k = [np.zeros(2) for _ in range(10)]
+p1 = {tuple(k[1])}
+p2 = {tuple(k[9])}
+moves = {'L': [-1, 0], 'R': [1, 0], 'U': [0, 1], 'D': [0, -1]}
+for move, b in lines:
+    for _ in range(int(b)):
+        k[0] += moves[move]
         for i in range(1, 10):
-            t = k[i]
-            h = k[i - 1]
-            if h[1] - t[1] > 1 and h[0] - t[0] == 0:
-                t[1] += 1
-            if h[1] - t[1] < -1 and h[0] - t[0] == 0:
-                t[1] -= 1
-            if h[0] - t[0] > 1 and h[1] - t[1] == 0:
-                t[0] += 1
-            if h[0] - t[0] < -1 and h[1] - t[1] == 0:
-                t[0] -= 1
+            h, t = k[i - 1: i + 1]
+            d = h - t
+            if norm(d, 2) == 2 or norm(d, 1) > 2:
+                t[0] += sign(d[0])
+                t[1] += sign(d[1])
+            p1.add(tuple(k[1]))
+            p2.add(tuple(k[9]))
 
-            if abs(h[0] - t[0]) > 0 and abs(h[1] - t[1]) > 1:
-                if h[1] > t[1]:
-                    t[1] += 1
-                if h[1] < t[1]:
-                    t[1] -= 1
-                if h[0] > t[0]:
-                    t[0] += 1
-                elif h[0] < t[0]:
-                    t[0] -= 1
+# part I
+print(len(p1))
 
-            if abs(h[1] - t[1]) > 0 and abs(h[0] - t[0]) > 1:
-                if h[0] > t[0]:
-                    t[0] += 1
-                if h[0] < t[0]:
-                    t[0] -= 1
-                if h[1] > t[1]:
-                    t[1] += 1
-                elif h[1] < t[1]:
-                    t[1] -= 1
-        tales.add(tuple(k[9]))
-        print(k)
-print(len(tales))
-print(tales)
-# 6911 too high
+# part II
+print(len(p2))
