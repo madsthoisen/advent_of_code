@@ -15,8 +15,6 @@ print(len(houses))
 pos = [0, 0]
 houses = {0}
 for i, d in enumerate(tmp):
-    pos[i%2] += dirs[d]
-    houses.add(pos[i%2])
+    pos[i % 2] += dirs[d]
+    houses.add(pos[i % 2])
 print(len(houses))
-
-
