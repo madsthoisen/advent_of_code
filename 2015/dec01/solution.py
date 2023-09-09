@@ -1,11 +1,10 @@
 import numpy as np
 
 with open("input") as f:
-    app = f.read().strip()
+    ll = [1 if x == '(' else - 1 for x in f.read().strip()]
 
 # part I
-print(app.count('(') - app.count(')'))
+print(sum(ll))
 
 # part II
-L = [1 if a == '(' else -1 for a in app]
-print(np.where(np.cumsum(L) == -1)[0][0] + 1)
+print(min(np.where(np.cumsum(ll) == -1)) + 1)
