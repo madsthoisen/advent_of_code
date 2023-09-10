@@ -1,39 +1,29 @@
-from copy import deepcopy
+import numpy as np
+
 
 with open("input") as f:
-    tmp = [line.strip().split(' through ') for line in f.readlines()]
-    cmds = [(l[0].split(' ') + [l[1]])[-3:] for l in tmp]
+    ins = [line.strip().split(' ')[-4:] for line in f.readlines()]
 
-def f(l, c):
-    if c == "on":
-        return 1
-    if c == "off":
-        return 0
-    return (l + 1) % 2
 
-def g(l, c):
-    if c == "on":
-        return l + 1
-    if c == "off":
-        return max(0, l - 1)
-    return l + 2
-
-def lights(grid, cmds, fct):
-    for cmd in cmds:
-        i0, i1 = list(map(int, cmd[1].split(',')))
-        j0, j1 = list(map(int, cmd[2].split(',')))
-        for i in range(i0, j0 + 1):
-            for j in range(i1, j1 + 1):
-                grid[i][j] = fct(grid[i][j], cmd[0])
+def do(grid, i, part2=False):
+    x1, y1, x2, y2 = map(int, i[1].split(',') + i[3].split(','))
+    s = np.s_[y1:y2 + 1, x1:x2 + 1]
+    if part2:
+        grid[s] += 2 if i[0] == "toggle" else (1 if i[0] == "on" else -1)
+        grid[s] = np.where(grid[s] > 0, grid[s], 0)
+    else:
+        grid[s] = (grid[s] + 1) % 2 if i[0] == "toggle" else (1 if i[0] == "on" else 0)
     return grid
 
-grid = [[0 for _ in range(1000)] for _ in range(1000)]
+
+def run(part2=False):
+    grid = np.zeros([1000, 1000], dtype=int)
+    [grid := do(grid, i, part2) for i in ins]
+    return sum(sum(grid))
+
 
 # part I
-grid_1 = lights(deepcopy(grid), cmds, f)
-print(sum(sum(line) for line in grid_1))
+print(run())
 
 # part II
-grid_2 = lights(deepcopy(grid), cmds, g)
-print(sum(sum(line) for line in grid_2))
-
+print(run(True))
