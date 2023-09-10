@@ -1,31 +1,19 @@
 import re
 
+
 with open("input") as f:
-    strings = [s.strip() for s in f.readlines()]
+    strings = [line.strip() for line in f.readlines()]
+
+
+def vowels(s): return len(re.findall(r"[aeiou]", s)) > 2
+def repeated(s): return re.search(r"(.)\1", s) is not None
+def illegal(s): return re.search(r"ab|cd|pq|xy", s) is not None
+def pair_twice(s): return re.search(r"(.{2}).*\1", s) is not None
+def repeat(s): return re.search(r"(.).\1", s) is not None
+
 
 # part I
-vowels = '[aeiou]' 
-twice = r'(\w)\1{1,}' 
-ex = 'ab|cd|pq|xy' 
+print(sum(vowels(s) and repeated(s) and not illegal(s) for s in strings))
 
-count = 0
-for string in strings:
-    c1 = (len(re.findall(vowels, string)) > 2)
-    c2 = re.search(twice, string)
-    c3 = re.search(ex, string)
-    if (c1 and c2) and (not c3):
-        count += 1
-print(count)
-
-# part II
-twice = r'(\w{2}).*\1'
-repeats = r'(\w)\w{1}\1'
-count = 0
-for string in strings:
-    c1 = re.search(twice, string)
-    c2 = re.search(repeats, string)
-    if c1 and c2:
-        count += 1
-print(count)
-
-
+# part I
+print(sum(pair_twice(s) and repeat(s) for s in strings))
