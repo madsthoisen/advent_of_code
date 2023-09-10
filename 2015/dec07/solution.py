@@ -1,36 +1,34 @@
 with open("input") as f:
-    tmp = [line.strip().split(" -> ") for line in f.readlines()]
+    ins = [line.strip().split(' -> ') for line in f.readlines()]
+    ins = {x[1]: x[0] for x in ins}
 
-ins = {l[1]: l[0] for l in tmp}
-out = {}
-def f(wire):
-    if wire in out:
-        return out[wire]
-    cmd = ins[wire].split(' ')
-    if len(cmd) == 1:
-        w = cmd[0]
-        out[wire] = int(w) if w.isdigit() else f(w)
-        return out[wire]
-    if cmd[0] == "NOT":
-        out[wire] = f(cmd[1])^65535
-        return out[wire]
-    a, op, b = cmd
-    a = int(a) if a.isdigit() else f(a)
-    b = int(b) if b.isdigit() else f(b)
-    if op == "AND":
-        o =  a & b 
-    elif op == "OR":
-        o =  a | b
-    elif op == "LSHIFT":
-        o =  a << b
-    elif op == "RSHIFT":
-        o =  a >> b
-    out[wire] = o
-    return out[wire]
+
+ops = {'AND': lambda a, b: a & b,
+       'OR': lambda a, b: a | b,
+       'LSHIFT': lambda a, b: a << b,
+       'RSHIFT': lambda a, b: a >> b}
+
+
+def f(w):
+    if w in wires:
+        return wires[w]
+    elif w.isdigit():
+        return int(w)
+    i = ins[w].split(' ')
+    if len(i) == 1:
+        return f(i[0])
+    elif len(i) == 2:
+        return ~f(i[1])
+    a, op, b = i
+    wires[w] = ops[op](f(a), f(b))
+    return wires[w]
+
 
 # part I
-print(part1 := f('a'))
+wires = {}
+out = f('a')
+print(out)
 
 # part II
-out = {'b': part1}
+wires = {'b': out}
 print(f('a'))
