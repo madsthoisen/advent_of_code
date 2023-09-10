@@ -1,19 +1,15 @@
 from hashlib import md5
+from itertools import count
 
-with open("input") as f:
-    tmp = f.read().strip()
 
-def pre(n):
-    app = 0
-    while True:
-        num = md5((tmp + str(app)).encode('utf-8')).hexdigest()
-        if num[:n] == '0'*n:
-            return app
-        app += 1
+def find(key, postfix):
+    return next(i for i in count(0) if md5(bytearray(f"{key}{i}", "utf-8")).hexdigest().startswith(postfix))
+
+
+key = "bgvyzdsv"
 
 # part I
-print(pre(5))
+print(find(key, "00000"))
 
 # part II
-print(pre(6))
-
+print(find(key, "000000"))
