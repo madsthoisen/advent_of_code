@@ -1,26 +1,23 @@
 import re
 
+
 with open("input") as f:
     tmp = [line.strip() for line in f.readlines()]
 
 patterns = [r"\\x[0-9a-fA-F]{2}", r"\\\\", r"\\\""]
 
-# part I
-add = 0
-for line in tmp:
+
+def ev(line, part2=False):
     l = len(line)
-    for pattern in patterns:
-        line = re.sub(pattern, "x", line)
-    line = line[1:-1]
-    add += (l - len(line)) 
-print(add)
+    d = {0: 5, 1: 4, 2: 4}
+    for i, p in enumerate(patterns):
+        sub = ' ' * d[i] if part2 else ' '
+        line = re.sub(p, sub, line)
+    return len(line) - l + 4 if part2 else l - len(line) + 2
+
+
+# part I
+print(sum(ev(x) for x in tmp))
 
 # part II
-add = 0
-for line in tmp:
-    l = len(line)
-    line = re.sub(patterns[0], "xxxxx", line)
-    line = re.sub(patterns[1], "xxxx", line)
-    line = re.sub(patterns[2], "xxxx", line)
-    add += (len(line) + 4 - l) 
-print(add)
+print(sum(ev(x, True) for x in tmp))
