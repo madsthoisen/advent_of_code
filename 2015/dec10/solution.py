@@ -1,17 +1,20 @@
 import itertools as it
 
+
 with open("input") as f:
-    tmp = f.read().strip()
+    w = f.read().strip()
+
 
 def look_and_say(nums):
-    return ''.join([str(len(list(group))) + str(num) for num, group in it.groupby(nums)])
+    return ''.join(str(len(list(g))) + str(num) for num, g in it.groupby(nums))
+
 
 # part I
 for _ in range(40):
-    tmp = look_and_say(tmp)
-print(len(tmp))
+    w = look_and_say(w)
+print(len(w))
 
 # part II
 for _ in range(10):
-   tmp = look_and_say(tmp)
-print(len(tmp))
+    w = look_and_say(w)
+print(len(w))
