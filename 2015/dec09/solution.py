@@ -13,14 +13,16 @@ for line in distances:
 vertices = set(G)
 
 
-def extreme_hamiltonian(start, not_visited, mode):
-    if len(not_visited) == 0:
-        return 0
-    return mode(w + extreme_hamiltonian(e, not_visited - {e}, mode) for e, w in G[start] if e in not_visited)
+def extreme_hamiltonian(mode):
+    def _extreme_hamiltonian(start, not_visited, mode):
+        if len(not_visited) == 0:
+            return 0
+        return mode(w + _extreme_hamiltonian(e, not_visited - {e}, mode) for e, w in G[start] if e in not_visited)
+    return mode(_extreme_hamiltonian(start, vertices - {start}, mode) for start in vertices)
 
 
 # part I
-print(min(extreme_hamiltonian(start, vertices - {start}, min) for start in vertices))
+print(extreme_hamiltonian(min))
 
 # part II
-print(max(extreme_hamiltonian(start, vertices - {start}, max) for start in vertices))
+print(extreme_hamiltonian(max))
