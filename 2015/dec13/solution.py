@@ -1,22 +1,27 @@
-import networkx as nx
 from collections import defaultdict
+from itertools import permutations
+
 
 with open("input") as f:
-    tmp = [line.strip()[:-1].split(' ') for line in f.readlines()]
+    increases = [line.strip().split(' ') for line in f.readlines()]
 
-def get_increase(path, G):
-    return sum([G[path[i]][path[i+1]]['weight'] for i in range(len(path)-1)]) + G[path[len(path) - 1]][path[0]]["weight"]
 
-gains = defaultdict(int)
-for L in tmp:
-    gains[tuple(sorted([L[0], L[-1]]))] += int(L[3]) if L[2] == "gain" else -int(L[3])
+G = defaultdict(int)
+for line in increases:
+    a, b, mode, val = line[0], line[-1][:-1], line[2], line[3]
+    G[(a, b)] += int(val)*(1 if mode == "gain" else -1)
+
+
+def increase(seating):
+    return sum(G[(a, b)] + G[(b, a)] for a, b in zip(seating, seating[1:] + (seating[0],)))
+
 
 # part I
-G = nx.Graph()
-G.add_weighted_edges_from([key + (val,) for key, val in gains.items()])
-
-print(max([get_increase(path, G) for s in G for t in G for path in nx.all_simple_paths(G, s, t) if len(path) == len(G)]))
+people = {a for a, _ in G}
+print(max(increase(seating) for seating in permutations(people)))
 
 # part II
-G.add_weighted_edges_from([("Me", guest, 0) for guest in G])
-print(max([get_increase(path, G) for s in G for t in G for path in nx.all_simple_paths(G, s, t) if len(path) == len(G)]))
+for p in people:
+    G[("me", p)] = 0
+people.add("me")
+print(max(increase(seating) for seating in permutations(people)))
