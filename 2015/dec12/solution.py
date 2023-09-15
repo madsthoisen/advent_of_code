@@ -1,23 +1,25 @@
 import json
 
+
 with open("input", "rb") as f:
     content = json.load(f)
 
-def sum_elems(elem, add, ignore_red):
-    if isinstance(elem, str):
+
+def sum_things(t, ignore_red):
+    if isinstance(t, str):
         return 0
-    if isinstance(elem, int):
-        return elem
-    if isinstance(elem, list):
-        return sum(sum_elems(el, add, ignore_red) for el in elem)
-    if isinstance(elem, dict):
-        if ignore_red:
-            if "red" in elem.keys() or "red" in elem.values():
-                return 0
-        return add + sum([sum_elems(val, add, ignore_red) for key, val in elem.items()])
+    if isinstance(t, int):
+        return t
+    if isinstance(t, list):
+        return sum(sum_things(x, ignore_red) for x in t)
+    if isinstance(t, dict):
+        if ignore_red and "red" in t.values():
+            return 0
+        return sum(sum_things(v, ignore_red) for v in t.values())
+
 
 # part I
-print(sum_elems(content, 0, False))
+print(sum_things(content, False))
 
 # part II
-print(sum_elems(content, 0, True))
+print(sum_things(content, True))
