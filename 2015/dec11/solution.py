@@ -1,65 +1,48 @@
-with open("input") as f:
-    pwd = f.read().strip()
+import re
 
 
-def next_letter(s):
-    return chr((ord(s) + 1 - 97) % 26 + 97)
+def next_letter(char):
+    return chr((ord(char) - 97 + 1) % 26 + 97)
 
-def increment(s):
+
+def inc(s):
     new_s = ''
-    for i in range(1, len(s)):
-        c = next_letter(s[-i])
-        new_s += c
-        if c != 'a':
-            break
-    return s[:-i] + new_s[::-1]
+    while s:
+        s, x = s[:-1], s[-1]
+        new_s = next_letter(x) + new_s
+        if new_s[0] != 'a':
+            return s + new_s
+    return 'b' + new_s
 
-def has_straight(pwd):
-    streak = 1
-    prev = -1
-    for c in pwd:
-        if ord(c) == prev + 1:
-            streak += 1
-            if streak == 3:
-                return True
-        else:
-            streak = 1
-        prev = ord(c)
+
+def has_inc(s):
+    ll = [ord(char) for char in s]
+    for a, b, c in zip(ll, ll[1:], ll[2:]):
+        if a + 2 == b + 1 == c:
+            return True
     return False
 
-def has_two_pairs(pwd):
-    n_pairs = 0
-    i = 0
-    prev = ''
+
+def has_iol(s):
+    return 'i' in s or 'o' in s or 'l' in s
+
+
+def has_pairs(s):
+    return len(re.findall(r"(.)\1", s)) > 1
+
+
+def next_pwd(pwd):
     while True:
-        if i >= len(pwd):
-            return n_pairs > 1
-        c = pwd[i]
-        if c == prev:
-            n_pairs += 1
-            i += 2
-            if i < len(pwd):
-                prev = pwd[i - 1]
-            continue
-        prev = c
-        i += 1
-
-def is_valid(pwd):
-    if 'i' in pwd or 'o' in pwd or 'l' in pwd:
-        return False
-    if not has_two_pairs(pwd):
-        return False
-    if not has_straight(pwd):
-        return False
-    return True
+        pwd = inc(pwd)
+        if has_inc(pwd) and not has_iol(pwd) and has_pairs(pwd):
+            return pwd
 
 
-# part I and II
-count = 0
-while True:
-    pwd = increment(pwd)
-    if is_valid(pwd):
-        print(pwd)
-        count += 1
-        if count == 2:
-            break
+puzzle_input = "vzbxkghb"
+
+# part I
+pwd = next_pwd(puzzle_input)
+print(pwd)
+
+# part II
+print(next_pwd(pwd))
