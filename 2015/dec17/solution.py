@@ -1,20 +1,14 @@
-from collections import defaultdict
 from itertools import product
+
 
 with open("input") as f:
     containers = list(map(int, f.readlines()))
 
-m = defaultdict(int)
-add = 0
-for vec in product(range(2), repeat=len(containers)):
-    tmp = [containers[i] for i, val in enumerate(vec) if val == 1]
-    if sum(tmp) == 150:
-        add += 1
-        m[sum(vec)] += 1
+bins = product([0, 1], repeat=len(containers))
+valid = {b: sum(b) for b in bins if sum(containers[i] for i, val in enumerate(b) if val) == 150}
 
 # part I
-print(add)
+print(len(valid))
 
 # part II
-print(m[min(m.keys())])
-
+print(sum(v == min(valid.values()) for k, v in valid.items()))
