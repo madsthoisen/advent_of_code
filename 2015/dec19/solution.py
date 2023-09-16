@@ -1,30 +1,25 @@
-from collections import defaultdict
-from re import finditer
+import re
+
+from itertools import count
+
 
 with open("input") as f:
-    repl, w = f.read().split("\n\n")
-    w = w.strip()
+    replacements, molecule = f.read().strip().split("\n\n")
+    replacements = [x.split(' => ') for x in replacements.split("\n")]
 
-react = defaultdict(list)
-react_r = defaultdict(list)
-for r in repl.split('\n'):
-    a, b = r.split(" => ")
-    react[a].append(b)
-    react_r[b].append(a)
 
-def evolve(w, react):
-    return {w[:r.start()] + b + w[r.end():] for a in react for b in react[a] 
-        for r in finditer(a, w)}
+def step(molecule):
+    return {molecule[:m.start()] + v + molecule[m.end():] for k, v in replacements for m in re.finditer(k, molecule)}
+
 
 # part I
-M = evolve(w, react)
-print(len(M))
+print(len(step(molecule)))
 
-# part II // Dissapointingly, this greedy approach works on the particular input
-i = 0
-while True:
-    w = min(evolve(w, react_r), key=len)
-    i += 1
-    if w == 'e':
+# part II - Greedy approach with longest substitution in reverse direction works
+replacements = [x[::-1] for x in replacements]
+molecules = {molecule}
+for i in count(1):
+    molecules = step(min(molecules, key=len))
+    if 'e' in molecules:
         print(i)
         break
