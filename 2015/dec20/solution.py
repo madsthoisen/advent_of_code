@@ -4,10 +4,8 @@ from sympy import divisors
 
 puzzle_input = 33100000
 
-
 # part I
 print(next(i for i in count(0) if sum(divisors(i)) * 10 >= puzzle_input))
-
 
 # part II
 m = puzzle_input // 11
