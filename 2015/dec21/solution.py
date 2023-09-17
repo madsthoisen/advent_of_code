@@ -1,42 +1,40 @@
-import re
-
 from itertools import combinations
-from math import inf
+
 
 with open("input") as f:
-    boss = list(map(int, [re.search(r"\d+", l.strip())[0] for l in f.readlines()]))
+    boss = tuple(map(int, [line.strip().split(' ')[-1] for line in f.readlines()]))
 
-with open("shop") as f:
-    L = [b.split("\n") for b in f.read().split("\n\n")]
+weapons = [[8, 4, 0], [10, 5, 0], [25, 6, 0], [40, 7, 0], [74, 8, 0]]
+armors = [[13, 0, 1], [31, 0, 2], [53, 0, 3], [75, 0, 4], [102, 0, 5]]
+rings = [[25, 1, 0], [50, 2, 0], [100, 3, 0], [20, 0, 1], [40, 0, 2], [80, 0, 3]]
 
-W, A, R = [[list(map(int, re.findall(r"\d+", line)))[-3:] for line in B[1:]] for B in L]
-A += [[0, 0, 0]]
-R = R[:-1] + [[0, 0, 0], [0, 0, 0]]
 
-def fight(specs):
-    a, d = 0, 1
-    while specs[d][0] > 0:
-        specs[d][0] -= specs[a][1] - specs[d][2]
-        a, d = (a + 1) % 2, (d + 1) % 2
-    return a
+def play(player, boss):
+    hp = 100
+    while True:
+        boss[0] -= max(player[0] - boss[2], 0)
+        if boss[0] <= 0:
+            return True
+        hp -= max(boss[1] - player[1], 0)
+        if hp <= 0:
+            return False
 
-min_cost = inf
-max_cost = 0
-for w in W:
-    for a in A:
-        for r1, r2 in combinations(R, 2):
-            me = [100, 0, 0] 
-            me[1] += w[1] + a[1] + r1[1] + r2[1]
-            me[2] += w[2] + a[2] + r1[2] + r2[2]
-            cost = w[0] + a[0] + r1[0] + r2[0]
-            res = fight([me, boss.copy()])
-            if res == 0:
-                min_cost = min(min_cost, cost)
-            if res == 1:
-                max_cost = max(max_cost, cost)
+
+part_1 = float("inf")
+part_2 = 0
+for w in weapons:
+    for a in armors + [[0, 0, 0]]:
+        for r1, r2 in combinations(rings + [[0, 0, 0], [0, 0, 0]], 2):
+            gold = w[0] + a[0] + r1[0] + r2[0]
+            dam = w[1] + a[1] + r1[1] + r2[1]
+            arm = w[2] + a[2] + r1[2] + r2[2]
+            if play((dam, arm), list(boss)):
+                part_1 = min(part_1, gold)
+            else:
+                part_2 = max(part_2, gold)
 
 # part I
-print(min_cost)
+print(part_1)
 
 # part II
-print(max_cost)
+print(part_2)
