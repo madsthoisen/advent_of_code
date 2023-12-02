@@ -2,7 +2,7 @@ import re
 
 
 with open("input") as f:
-    lines = [line.strip() for line in f.readlines() if line != "\n"]
+    lines = [line.strip() for line in f.readlines()]
 
 
 def get(d):
