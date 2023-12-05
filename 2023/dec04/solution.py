@@ -14,10 +14,7 @@ for c, rest in lines:
     w = len(set(map(int, a.split())) & set(map(int, b.split())))
     for no in range(c + 1, c + 1 + w):
         nums[no] += nums[c]
-    count = 1 if w else 0
-    for _ in range(w - 1):
-        count *= 2
-    add += count
+    add += 2**(w - 1) if w else 0
 
 # part I
 print(add)
