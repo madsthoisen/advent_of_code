@@ -15,7 +15,7 @@ def kind(hand, part2=False):
         vals['J'] = -1
         hand = [x for x in hand if x != 'J']
     combs = combinations_with_replacement(set(vals.keys() - {'J'}), 5 - len(hand))
-    return max([ranks[tuple(sorted(Counter(hand + list(add)).values()))]] + card_vals for add in combs)
+    return max([ranks[tuple(sorted(Counter(hand + list(add)).values()))], *card_vals] for add in combs)
 
 
 # part I
