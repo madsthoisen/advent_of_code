@@ -1,6 +1,5 @@
-from itertools import combinations_with_replacement
-
 from collections import Counter
+from itertools import combinations_with_replacement
 
 
 with open("input") as f:
