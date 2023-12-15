@@ -1,4 +1,4 @@
-from collections import defaultdict
+from functools import reduce
 
 
 with open("input") as f:
@@ -6,38 +6,24 @@ with open("input") as f:
 
 
 def get(s):
-    curr = 0
-    for x in s:
-        curr += ord(x)
-        curr *= 17
-        curr %= 256
-    return curr
+    return reduce(lambda x, y: (x + ord(y)) * 17 % 256, s, 0)
 
 
 # part I
 print(sum(get(s) for s in ins))
 
 # part II
-boxes = defaultdict(list)
+boxes = {i: dict() for i in range(256)}
 for x in ins:
     if '-' in x:
         label = x[:-1]
         box = get(label)
-        boxes[box] = [x for x in boxes[box] if x[0] != label]
+        boxes[box].pop(label, None)
     elif '=' in x:
         label, fl = x.split('=')
         box = get(label)
-        new_boxes = defaultdict(list)
-        not_present = True
-        for d in boxes:
-            for (a, b) in boxes[d]:
-                if a != label:
-                    new_boxes[d].append((a, b))
-                elif a == label:
-                    new_boxes[d].append((a, int(fl)))
-                    not_present = False
-        boxes = new_boxes
-        if not_present:
-            boxes[box].append((label, int(fl)))
+        boxes[box][label] = int(fl)
+        for b in set(boxes) - {box}:
+            boxes[b].pop(label, None)
 
-print(sum((k + 1) * (i + 1) * b for k in range(256) for i, (_, b) in enumerate(boxes[k])))
+print(sum((k + 1) * (i + 1) * b for k, box in boxes.items() for i, (_, b) in enumerate(box.items())))
