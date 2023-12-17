@@ -12,9 +12,10 @@ ROWS, COLS = len(lines), len(lines[0])
 def solve(min_len, max_len):
     curr = [(0, 0, 0, 1, 0), (0, 0, 0, 0, 1)]
     seen = defaultdict(lambda: 999_999)
-    winner = 999_999
     while curr:
-        score, r, c, dr, dc = heappop(curr)  # score, curr row, curr col, dir vert, dir hor
+        score, r, c, dr, dc = heappop(curr)
+        if r == ROWS - 1 and c == COLS - 1:
+            return score
         dirs = {(-1, 0), (1, 0)} if dr == 0 else {(0, -1), (0, 1)}
         for n in range(min_len, max_len + 1):
             for dr, dc in dirs:
@@ -28,12 +29,7 @@ def solve(min_len, max_len):
                 if seen[new_tup] <= new_score:
                     continue
                 seen[new_tup] = new_score
-
-                if rr == ROWS - 1 and cc == COLS - 1:
-                    winner = min(winner, new_score)
-
-                heappush(curr, (new_score, rr, cc, dr, dc))
-    return winner
+                heappush(curr, (new_score,) + new_tup)
 
 
 # part I
