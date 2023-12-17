@@ -3,10 +3,10 @@ from collections import defaultdict
 
 
 with open("input") as f:
-    lines = [line.strip() for line in f.readlines()]
+    grid = [line.strip() for line in f.readlines()]
 
 
-ROWS, COLS = len(lines), len(lines[0])
+ROWS, COLS = len(grid), len(grid[0])
 
 
 def solve(min_len, max_len):
@@ -23,7 +23,7 @@ def solve(min_len, max_len):
                 if not 0 <= rr < ROWS or not 0 <= cc < COLS:
                     continue
 
-                new_score = score + sum(int(lines[r + dr * i][c + dc * i]) for i in range(1, n + 1))
+                new_score = score + sum(int(grid[r + dr * i][c + dc * i]) for i in range(1, n + 1))
                 new_tup = (rr, cc, dr, dc)
 
                 if seen[new_tup] <= new_score:
