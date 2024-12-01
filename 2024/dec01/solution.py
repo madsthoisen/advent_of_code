@@ -1,5 +1,5 @@
 with open("input") as f:
-    lines = [list(map(int, line.strip().split())) for line in f.readlines()]
+    lines = [map(int, line.strip().split()) for line in f.readlines()]
 
 
 la, lb = list(zip(*lines))
