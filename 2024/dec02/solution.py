@@ -1,5 +1,5 @@
 with open("input") as f:
-    reports = [list(map(int, line.strip().split())) for line in f.readlines()]
+    reports = [list(map(int, line.split())) for line in f.readlines()]
 
 
 def safe(rep):
@@ -10,8 +10,8 @@ def safe(rep):
 
 
 # part I
-print(sum(safe(rep) for rep in reports))
+print(sum(map(safe, reports)))
 
 
 # part II
-print(sum(any(safe(rep[:i] + rep[i + 1:]) for i in range(-1, len(rep) + 1)) for rep in reports))
+print(sum(any(safe(rep[:i] + rep[i + 1:]) for i in range(len(rep))) for rep in reports))
