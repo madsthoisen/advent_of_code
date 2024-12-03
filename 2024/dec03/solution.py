@@ -5,20 +5,19 @@ with open("input") as f:
     instructions = f.read()
 
 
-def execute(part2=False):
+def execute(part2):
     do = True
     add = 0
-    for ins in re.findall(r"mul\(\d+,\d+\)|do\(\)|don't\(\)", instructions):
-        nums = re.findall(r"\d+", ins)
-        if nums:
-            add += (int(nums[0]) * int(nums[1])) * do
+    for a, b, ins in re.findall(r"mul\((\d+),(\d+)\)|(do\(\)|don't\(\))", instructions):
+        if a and b and do:
+            add += int(a) * int(b)
         elif part2:
-            do = ins == "do()"
+            do = ins == 'do()'
     return add
 
 
 # part I
-print(execute())
+print(execute(False))
 
 
 # part II
