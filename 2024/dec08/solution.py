@@ -18,9 +18,9 @@ for r, row in enumerate(lines):
 
 def get_antinodes(a, b, part):
     for i in [2] if part == 1 else count(1):
-        x = (a[0] - i * (a[0] - b[0]), a[1] - i * (a[1] - b[1]))
-        if 0 <= x[0] < len(lines) and 0 <= x[1] < len(lines[0]):
-            yield x
+        p = (a[0] - i * (a[0] - b[0]), a[1] - i * (a[1] - b[1]))
+        if 0 <= p[0] < len(lines) and 0 <= p[1] < len(lines[0]):
+            yield p
         else:
             break
 
