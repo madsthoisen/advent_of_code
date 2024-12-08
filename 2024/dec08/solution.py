@@ -17,15 +17,12 @@ for r, row in enumerate(lines):
 
 
 def get_antinodes(a, b, part):
-    iterator = [2] if part == 1 else count(1)
-    out = set()
-    for i in iterator:
+    for i in [2] if part == 1 else count(1):
         a1 = (a[0] - i * (a[0] - b[0]), a[1] - i * (a[1] - b[1]))
         if 0 <= a1[0] < len(lines) and 0 <= a1[1] < len(lines[0]):
-            out.add(a1)
+            yield a1
         else:
             break
-    return out
 
 
 # part I
