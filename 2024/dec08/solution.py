@@ -1,5 +1,3 @@
-import string
-
 from collections import defaultdict
 from itertools import count
 from itertools import permutations
@@ -12,7 +10,7 @@ with open("input") as f:
 freqs = defaultdict(list)
 for r, row in enumerate(lines):
     for c, val in enumerate(row):
-        if val in set(string.ascii_letters) | {str(x) for x in range(10)}:
+        if val != '.':
             freqs[val].append((r, c))
 
 
