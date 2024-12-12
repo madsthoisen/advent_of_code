@@ -17,13 +17,13 @@ ops = {0: lambda x: x * 17,
        7: lambda x: x * x}
 
 _monkeys = {m: {"items": list(map(int, re.findall(r'\d+', lines[1]))),
-                "test4": int(lines[3][21:]),
+                "test": int(lines[3][21:]),
                 True: list(map(int, re.findall(r'\d+', lines[4])))[0],
                 False: list(map(int, re.findall(r'\d+', lines[5])))[0],
                 "op": ops[m],
                 } for m, lines in enumerate(blocks)}
 
-mod = np.prod([m["test4"] for m in _monkeys.values()])
+mod = np.prod([m["test"] for m in _monkeys.values()])
 
 
 def run(n_rounds):
@@ -35,7 +35,7 @@ def run(n_rounds):
                 item = m["items"].pop(0)
                 inspected[i] += 1
                 item = m["op"](item)
-                monkeys[m[item % m["test4"] == 0]]["items"].append(item % mod)
+                monkeys[m[item % m["test"] == 0]]["items"].append(item % mod)
     a, b = sorted(inspected)[-2:]
     return a * b
 
