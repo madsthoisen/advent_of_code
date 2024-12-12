@@ -2,8 +2,8 @@ import networkx as nx
 
 
 with open("input") as f:
-    lines = [line.strip() for line in f.readlines()]
-    grid = {r + c * 1j: lines[r][c] for r in range(len(lines)) for c in range(len(lines[0]))}
+    lines = f.read().split()
+    grid = {r + c * 1j: val for r, row in enumerate(lines) for c, val in enumerate(row)}
 
 
 DIRS = [-1, 1, -1j, 1j]
