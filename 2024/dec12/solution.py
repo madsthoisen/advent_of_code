@@ -6,18 +6,6 @@ with open("input") as f:
     grid = {r + c * 1j: lines[r][c] for r in range(len(lines)) for c in range(len(lines[0]))}
 
 
-def get_n_sides(fence, region):
-    total = 4
-    for inc in [-1j, 1j]:
-        ab = sorted([z + inc for z in fence if z + inc in region], key=lambda z: (z.imag, z.real))
-        total += sum(z2.real - z1.real > 1 or z1.imag != z2.imag for z1, z2 in zip(ab, ab[1:]))
-
-    for inc in [-1, 1]:
-        lr = sorted([z + inc for z in fence if z + inc in region], key=lambda z: (z.real, z.imag))
-        total += sum(z2.imag - z1.imag > 1 or z1.real != z2.real for z1, z2 in zip(lr, lr[1:]))
-    return total
-
-
 DIRS = [-1, 1, -1j, 1j]
 G = nx.Graph()
 G.add_nodes_from(grid)
@@ -25,9 +13,11 @@ G.add_edges_from([(z, z + dz) for z, val in grid.items() for dz in DIRS if grid.
 
 part1, part2 = 0, 0
 for region in nx.connected_components(G):
-    fence = [z + dz for z in region for dz in DIRS if grid.get(z + dz) != grid[list(region)[0]]]
+    fence = [(z, z + dz) for z in region for dz in DIRS if grid.get(z + dz) != grid[list(region)[0]]]
     part1 += len(region) * len(fence)
-    part2 += len(region) * get_n_sides(fence, region)
+    # remove pieces of fence where there is another piece below or to the right
+    remove = {(z, nz) for z, nz in fence for dz in [1j, 1] if (z + dz, nz + dz) in fence}
+    part2 += len(region) * len(set(fence) - remove)
 
 
 # part I
