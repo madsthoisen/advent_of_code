@@ -37,13 +37,13 @@ def get_boxes_to_move(boxes, r, c, dr, dc, m, part):
 
 
 def solve(grid, boxes, start, part):
-    incs = [0, 1] if part == 2 else [0]
+    directly_above_box = [0, 1] if part == 2 else [0]
     r, c = start
     for m in moves:
         dr, dc = DIRECTIONS[m]
         boxes_to_move = get_boxes_to_move(boxes, r, c, dr, dc, m, part=part)
         if boxes_to_move:
-            if all(grid[(br + dr, bc + dc + inc)] != '#' for br, bc in boxes_to_move for inc in incs):
+            if all(grid[(br + dr, bc + dc + inc)] != '#' for br, bc in boxes_to_move for inc in directly_above_box):
                 boxes = boxes - boxes_to_move | {(r + dr, c + dc) for r, c in boxes_to_move}
                 r, c = r + dr, c + dc
         elif grid[(r + dr, c + dc)] != "#":
