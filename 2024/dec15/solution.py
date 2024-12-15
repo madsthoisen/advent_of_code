@@ -25,15 +25,15 @@ def get_boxes_to_move(boxes, r, c, dr, dc, m, part):
     if m in {'<', '>'}:
         return set(takewhile(lambda x: x in boxes, ((r + i * dr, c + (i + inc) * dc) for i in count(1, jump))))
 
-    boxes_move = set()
+    move = set()
     check = [(r + dr, c + dc + ab) for ab in above_person]
     while check:
         _r, _c = check.pop()
         if (_r, _c) in boxes:
-            boxes_move.add((_r, _c))
+            move.add((_r, _c))
             for lr in above_box:
                 check.append((_r + dr, _c + dc + lr))
-    return boxes_move
+    return move
 
 
 def solve(grid, boxes, start, part):
