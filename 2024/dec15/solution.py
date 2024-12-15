@@ -19,12 +19,12 @@ def setup(lines):
 def get_boxes_to_move(boxes, r, c, dr, dc, m, part):
     jump = 1 if part == 1 else 2
     inc = 1 if part == 2 and m == '<' else 0
+    above_person = [0] if part == 1 else [0, -1]
+    above_box = [0] if part == 1 else [-1, 0, 1]
 
     if m in {'<', '>'}:
         return set(takewhile(lambda x: x in boxes, ((r + i * dr, c + (i + inc) * dc) for i in count(1, jump))))
 
-    above_person = [0] if part == 1 else [0, -1]
-    above_box = [0] if part == 1 else [-1, 0, 1]
     boxes_move = set()
     check = [(r + dr, c + dc + ab) for ab in above_person]
     while check:
