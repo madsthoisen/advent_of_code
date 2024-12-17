@@ -29,13 +29,14 @@ shortest = inf
 for d in DIRS:
     if (e, d) in G.nodes:
         length = nx.shortest_path_length(G, start, (e, d), weight="weight")
-        if length < shortest:
+        if length <= shortest:
             shortest = length
             shortest_paths = nx.all_shortest_paths(G, start, (e, d), weight="weight")
             seen = {p[0] for path in shortest_paths for p in path}
 
 # part I
 print(shortest)
+
 
 # part II
 print(len(seen))
