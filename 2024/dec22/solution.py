@@ -2,7 +2,7 @@ from collections import defaultdict
 
 
 with open("input") as f:
-    numbers = [int(line) for line in f.readlines()]
+    numbers = list(map(int, f.read().split("\n")))
 
 
 def do(n):
