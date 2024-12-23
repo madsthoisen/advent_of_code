@@ -29,4 +29,4 @@ def build(lim):
 print(sum(a[0] == 't' or b[0] == 't' or c[0] == 't' for a, b, c in build(2)))
 
 # part II
-print(','.join(x for x in sorted(build(len(connections)).pop())))
+print(','.join(x for x in build(len(connections)).pop()))
