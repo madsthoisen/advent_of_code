@@ -25,4 +25,5 @@ while i < len(ranges) - 1:
     else:
         i += 1
 
+# part II
 print(sum(b - a + 1 for a, b in ranges))
