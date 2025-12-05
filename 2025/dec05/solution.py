@@ -15,6 +15,7 @@ def check(ing):
 # part I
 print(sum(check(ing) for ing in available))
 
+# part II
 i = 0
 while i < len(ranges) - 1:
     a, b = ranges[i]
@@ -24,6 +25,4 @@ while i < len(ranges) - 1:
         del ranges[i + 1]
     else:
         i += 1
-
-# part II
 print(sum(b - a + 1 for a, b in ranges))
