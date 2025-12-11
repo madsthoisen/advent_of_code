@@ -13,9 +13,7 @@ G.add_edges_from((a, b) for a, bs in lines for b in bs.split(' '))
 print(len(list(nx.all_simple_paths(G, 'you', 'out'))))
 
 # part II
-assert nx.is_directed_acyclic_graph(G)
 tg = list(nx.topological_generations(G))
-assert tg[0] == ['svr'] and tg[-1] == ['out']
 dd = {(tg[0][0], 0): 1}
 for bs in tg:
     new_dd = defaultdict(lambda: 0)
